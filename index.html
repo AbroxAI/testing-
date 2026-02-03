@@ -5,11 +5,13 @@
 <title>Abrox – Private Lounge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c1f26">
+<!-- Tailwind + Lucide -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="emoji-pack.js" defer></script>
 
 <script>
+/* Tailwind config (kept from your UI) */
 tailwind.config = {
   theme: {
     extend: {
@@ -59,8 +61,12 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
 @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
 /* ================= CHAT ================= */
+#chat{
+  -webkit-overflow-scrolling: touch;
+  padding-bottom:18px;
+}
 .msg{
-  display:flex;gap:8px;margin-bottom:14px;align-items:flex-end; /* increased gap for realism */
+  display:flex;gap:8px;margin-bottom:12px;align-items:flex-end;
   transition:transform .18s ease, opacity .18s ease;
   will-change: transform, opacity;
   contain: layout size style;
@@ -71,9 +77,9 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
 .avatar{width:42px;height:42px;border-radius:999px;object-fit:cover}
 .msg.grouped .avatar{visibility:hidden}
 
-/* bubble styles — minimal shadows for perf */
+/* bubble styles */
 .bubble{
-  max-width:74%;padding:12px 14px;font-size:14px;line-height:1.5;position:relative;
+  max-width:74%;padding:12px 14px;font-size:15px;line-height:1.45;position:relative;
   background:#262b38;border-radius:10px 20px 20px 10px; /* default in-msg */
   transform: translateZ(0);
   will-change: transform, opacity;
@@ -83,19 +89,19 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
 .msg.out .bubble::after{content:'';position:absolute;right:-4px;bottom:12px;width:10px;height:10px;background:#2b3242;transform:rotate(45deg)}
 .grouped.in .bubble::before,.grouped.out .bubble::after{display:none}
 
-/* lighten UI painting cost by avoiding complex CSS like gradients/shadow-heavy styles */
-.sender{font-size:12px;font-weight:600;color:#6bdba7;margin-bottom:6px;display:flex;gap:8px;align-items:center}
-.time{font-size:10px;opacity:.55;margin-top:8px;display:flex;gap:6px;justify-content:flex-end;align-items:center}
+/* sender + time */
+.sender{font-size:13px;font-weight:700;color:#6bdba7;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.time{font-size:11px;opacity:.65;margin-top:6px;display:flex;gap:6px;justify-content:flex-end;align-items:center}
 
 /* audio duration */
 .audio-duration{display:inline-block;font-size:11px;color:var(--muted);margin-left:8px;vertical-align:middle}
 
 /* date pill */
-.date-pill{position:sticky;top:8px;z-index:10;margin:22px auto;width:max-content;padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);font-size:12px;opacity:0;animation:fadeDate .35s ease forwards}
+.date-pill{position:relative;margin:12px auto;width:max-content;padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.45);font-size:12px;color:#ffffff;opacity:0;animation:fadeDate .28s ease forwards}
 @keyframes fadeDate{to{opacity:1}}
 
 /* reply preview */
-.reply-preview{font-size:11px;opacity:.95;border-left:3px solid #6bdba7;padding-left:8px;margin-bottom:6px;cursor:pointer;background:rgba(0,0,0,0.06);border-radius:6px;padding-top:6px;padding-bottom:6px}
+.reply-preview{font-size:12px;opacity:.95;border-left:3px solid #6bdba7;padding-left:8px;margin-bottom:6px;cursor:pointer;background:rgba(0,0,0,0.06);border-radius:6px;padding-top:6px;padding-bottom:6px}
 .reply-preview .snippet{opacity:.85;font-size:13px;margin-top:4px}
 .reply-preview .close-btn{cursor:pointer;font-size:12px;color:var(--muted);padding:2px 6px}
 
@@ -103,7 +109,7 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
 .pinned-banner{background:#232833;border-bottom:1px solid #343a4a;padding:8px 16px;font-size:13px;display:flex;gap:8px;align-items:center;cursor:pointer}
 .pinned-banner.hidden{display:none}
 
-/* input / waveform area (lightweight) */
+/* input / waveform area */
 .footer-wrap{position:relative;background:transparent}
 .input-shell{display:flex;align-items:center;background:#1c1f26;border-radius:999px;padding:10px 12px;gap:8px;width:100%;position:relative;overflow:hidden;contain:layout}
 .input-shell.recording{padding:10px 14px}
@@ -152,9 +158,9 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
     <header class="header">
       <div class="flex items-center justify-between px-4 py-3">
         <div class="flex gap-3 items-center">
-          <img src="assets/logo.png" class="w-9 h-9 rounded" alt="logo">
+          <img id="logoImg" src="assets/logo.png" class="w-9 h-9 rounded" alt="logo">
           <div style="min-width:0">
-            <div style="font-size:0.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Abrox Binary Bot – Private Lounge</div>
+            <div id="title" style="font-size:0.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Abrox Binary Bot – Private Lounge</div>
             <div class="flex items-center gap-1 text-xs" style="color:var(--muted)">
               <i data-lucide="lock" class="w-3 h-3" aria-hidden="true"></i>
               <span>Private Group</span>
@@ -210,7 +216,7 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
         <div class="flex items-center gap-2 ml-auto">
           <button id="mediaBtn" aria-label="Attach"><i data-lucide="paperclip"></i></button>
           <button id="micBtn" aria-pressed="false" aria-label="Record voice"><i data-lucide="mic"></i></button>
-          <button id="send" class="hidden text-send" aria-label="Send"><i data-lucide="send"></i></button>
+          <button id="send" class="text-send hidden" aria-label="Send"><i data-lucide="send"></i></button>
         </div>
       </div>
     </footer>
@@ -230,7 +236,184 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
   <input type="file" id="fileInput" class="hidden" aria-hidden="true">
 </div>
 
-<!-- SCRIPT LOAD ORDER: these reference filenames we will deliver one-by-one -->
+<!-- ----- Unified renderer + small UI glue (must load BEFORE other scripts) ----- -->
+<script>
+/* Module-ready handshake helper so modules can signal readiness */
+window._abrox = window._abrox || {};
+window._abrox._readyModules = window._abrox._readyModules || {};
+window._abrox.moduleReady = function(name){
+  try{
+    if(!name) return;
+    window._abrox._readyModules[name] = true;
+    // dispatch DOM event
+    try{ window.dispatchEvent(new CustomEvent(name + '.ready')); }catch(e){}
+    // generic
+    try{ window.dispatchEvent(new CustomEvent('module.ready', { detail:{ name } })); }catch(e){}
+    console.info('Module ready:', name);
+  }catch(e){ console.warn('moduleReady failed', e); }
+};
+
+/* Unified renderMessage implementation (used by all modules).
+   Other scripts check if window.renderMessage exists before defining their own — they will not override this.
+*/
+(function unifiedRenderer(){
+  if(window.renderMessage) return;
+
+  function escapeHtml(s){ return (''+s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+  function formatTime(ts) { const d = new Date(ts || Date.now()); return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+
+  window.renderMessage = function(m, autoScroll){
+    try{
+      if(!m) return;
+      const chat = document.getElementById('chat');
+      if(!chat) return;
+
+      // day pill
+      const d = new Date(m.time || Date.now());
+      const day = d.toDateString();
+      if(chat._lastDate !== day){
+        const pill = document.createElement('div');
+        pill.className = 'date-pill';
+        pill.textContent = (day === (new Date()).toDateString() ? 'Today' : d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric', year:'numeric' }));
+        chat.appendChild(pill);
+        chat._lastDate = day;
+      }
+
+      const grouped = false;
+      const el = document.createElement('div');
+      el.className = 'msg ' + ((m.out) ? 'out' : 'in') + (grouped ? ' grouped' : '');
+      el.dataset.id = m.id || ('id_' + Math.random().toString(36).slice(2,9));
+
+      const badge = m.role === 'ADMIN' ? '<span class="role-pill admin">ADMIN</span>' : (m.role === 'MOD' ? '<span class="role-pill mod">MOD</span>' : '<span class="verified-bubble" title="Verified"><i data-lucide="award" style="width:12px;height:12px"></i></span>');
+      const avatarHtml = (!m.out) ? `<img class="avatar" src="${escapeHtml(m.avatar||'assets/avatar-placeholder.png')}" alt="${escapeHtml(m.displayName||m.name||'')}" loading="lazy">` : '';
+
+      const displayName = escapeHtml(m.displayName || m.name || 'Member');
+
+      // message HTML (use .content so other logic can pick it up)
+      const textHtml = (m && m.text) ? escapeHtml(m.text) : '';
+
+      el.innerHTML = `${avatarHtml}
+        <div class="bubble" role="article">
+          ${!m.out ? `<div class="sender">${displayName} ${badge}</div>` : ''}
+          <div class="content">${textHtml}</div>
+          <div class="time"><i data-lucide="eye" class="w-3 h-3" aria-hidden="true"></i> · ${formatTime(m.time || Date.now())}</div>
+        </div>`;
+
+      chat.appendChild(el);
+
+      // create lucide icons if available (guarded)
+      try{ if(window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons(); }catch(e){}
+
+      // auto-scroll or show unread button
+      if(autoScroll === false){
+        // leave as-is
+      } else {
+        if(chat.scrollTop + chat.clientHeight < chat.scrollHeight - 80){
+          const unreadBtn = document.getElementById('unreadBtn');
+          if(unreadBtn){ unreadBtn.textContent = '⬇ New messages'; unreadBtn.style.display = 'block'; }
+        } else {
+          chat.scrollTop = chat.scrollHeight;
+        }
+      }
+
+      // interactions
+      if(typeof window.attachMessageInteractions === 'function'){
+        window.attachMessageInteractions(el, m);
+      } else {
+        // lightweight attach
+        attachMessageInteractions(el, m);
+      }
+    }catch(e){ console.error('renderMessage failed', e); }
+  };
+
+  // context menu + longpress interactions (exposed globally)
+  window.attachMessageInteractions = function(domEl, msg){
+    if(!domEl) return;
+    domEl.addEventListener('contextmenu', (ev) => {
+      ev.preventDefault(); showContextMenuAt(ev.clientX, ev.clientY, msg, domEl);
+    });
+    let touchTimer = null, startX=0, startY=0;
+    domEl.addEventListener('touchstart', (ev) => {
+      if(touchTimer) clearTimeout(touchTimer);
+      const t = ev.touches && ev.touches[0];
+      if(!t) return;
+      startX = t.clientX; startY = t.clientY;
+      touchTimer = setTimeout(() => { showContextMenuAt(t.clientX, t.clientY, msg, domEl); touchTimer = null; }, 520);
+    }, {passive:true});
+    domEl.addEventListener('touchmove', (ev) => {
+      if(!touchTimer) return;
+      const t = ev.touches && ev.touches[0];
+      if(!t) return;
+      if(Math.abs(t.clientX - startX) > 12 || Math.abs(t.clientY - startY) > 12){
+        clearTimeout(touchTimer); touchTimer = null;
+      }
+    }, {passive:true});
+    domEl.addEventListener('touchend', () => { if(touchTimer){ clearTimeout(touchTimer); touchTimer = null; } });
+  };
+
+  function showContextMenuAt(x,y,msg,anchorEl){
+    try{
+      document.querySelectorAll('.context-menu').forEach(n=>n.remove());
+      const menu = document.createElement('div');
+      menu.className = 'context-menu';
+      menu.style.position = 'fixed';
+      menu.style.left = x + 'px';
+      menu.style.top = y + 'px';
+      menu.style.zIndex = 9999;
+      menu.innerHTML = `<div class="menu-item" data-action="reply">Reply</div><div class="menu-item" data-action="pin">Pin</div>`;
+      document.body.appendChild(menu);
+      const rect = menu.getBoundingClientRect();
+      if(rect.right > window.innerWidth) menu.style.left = (window.innerWidth - rect.width - 8) + 'px';
+      if(rect.bottom > window.innerHeight) menu.style.top = (window.innerHeight - rect.height - 8) + 'px';
+      menu.querySelector('[data-action="reply"]').addEventListener('click', ()=>{ menu.remove(); setReplyTo(msg.id); });
+      menu.querySelector('[data-action="pin"]').addEventListener('click', ()=>{ menu.remove(); pinMessage(msg.id); });
+      setTimeout(()=>{ document.addEventListener('click', function closer(e){ if(!menu.contains(e.target)){ menu.remove(); document.removeEventListener('click', closer); } }); }, 10);
+    }catch(e){ console.warn('showContextMenuAt', e); }
+  }
+
+  // pin behavior
+  window.pinMessage = function(id){
+    try{
+      const el = document.querySelector(`[data-id="${id}"]`);
+      let txt = 'Pinned message';
+      if(el && el.querySelector('.content')) txt = el.querySelector('.content').textContent;
+      const pb = document.getElementById('pinnedText');
+      if(pb) pb.textContent = txt.length > 160 ? txt.slice(0,157) + '...' : txt;
+      const banner = document.getElementById('pinnedBanner');
+      if(banner) banner.classList.remove('hidden');
+      try{ localStorage.setItem('pinned_message_id', id); localStorage.setItem('pinned_message_text', txt); }catch(e){}
+    }catch(e){ console.warn('pinMessage error', e); }
+  };
+
+  // reply preview
+  window.setReplyTo = function(msgId){
+    try{
+      const target = document.querySelector(`[data-id="${msgId}"]`);
+      if(!target) return;
+      const senderText = target.querySelector('.sender') ? target.querySelector('.sender').textContent : 'Message';
+      const snippet = target.querySelector('.content') ? target.querySelector('.content').textContent.slice(0,120) : '';
+      const container = document.getElementById('replyPreviewContainer');
+      container.innerHTML = `<div class="reply-preview" id="replyPreview">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">${escapeHtml(senderText)}</div>
+          <div class="close-btn" id="replyClose" title="Cancel">✕</div>
+        </div>
+        <div class="snippet">${escapeHtml(snippet)}</div>
+      </div>`;
+      const closeBtn = document.getElementById('replyClose');
+      if(closeBtn) closeBtn.addEventListener('click', ()=> { const cont = document.getElementById('replyPreviewContainer'); if(cont) cont.innerHTML = ''; });
+      // focus input
+      const input = document.getElementById('input');
+      if(input) input.focus();
+    }catch(e){ console.warn('setReplyTo failed', e); }
+  };
+
+  // expose ready
+  window._abrox.moduleReady('Renderer');
+})();
+</script>
+
+<!-- SCRIPT LOAD ORDER: application scripts -->
 <script src="synthetic-people.js"></script>
 <script src="message-pool.js"></script>
 <script src="typing-engine.js"></script>
@@ -239,165 +422,110 @@ html,body{height:100%;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz
 <script src="message.js"></script>
 <script src="precache.js"></script>
 
+<!-- UI glue: footer controls, sidebar behavior, send toggles -->
 <script>
-/* ---------- Full UI glue (hooks used by the simulation + synthetic people) ---------- */
 (function(){
-  window._abrox = window._abrox || {};
+  // create icons once DOM is ready
+  function initIcons(){ try{ if(window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons(); }catch(e){} }
+  document.addEventListener('DOMContentLoaded', initIcons);
+  initIcons();
 
-  // minimal state
-  let replyTo = null;
-  window.sampleMembers = window.sampleMembers || [];
+  // toggle send button based on input
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('send');
+  const emojiBtn = document.getElementById('emojiBtn');
+  const mediaBtn = document.getElementById('mediaBtn');
+  const micBtn = document.getElementById('micBtn');
+  const membersBtn = document.getElementById('membersBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const memberSearch = document.getElementById('memberSearch');
+  const fileInput = document.getElementById('fileInput');
 
-  function escapeHtml(s){ return (''+s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
-
-  function formatTime(ts) {
-    const d = new Date(ts || Date.now());
-    return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  function toggleSendButton(){
+    if(!input || !sendBtn) return;
+    if(input.value && input.value.trim().length){
+      sendBtn.classList.remove('hidden');
+    } else {
+      sendBtn.classList.add('hidden');
+    }
   }
+  input && input.addEventListener('input', toggleSendButton);
 
-  // presence helper (UI-visible)
-  window.presenceOf = function(m){
-    const d = Date.now() - (m.lastActive || 0);
-    if(d < 90*1000) return 'online';
-    if(d < 300*1000) return 'idle';
-    return 'offline';
-  };
-
-  // Exposed: setSampleMembers (SyntheticPeople.injectToUI calls this)
-  window._abrox.setSampleMembers = function(members){
-    window.sampleMembers = members || [];
-    const pc = document.getElementById('memberCount');
-    if(pc) pc.textContent = (members.length||0).toLocaleString();
-    // delegate rendering to ui-adapter's helper
-    try{ if(window._abrox.renderMemberWindow) window._abrox.renderMemberWindow(); }catch(e){}
-  };
-
-  // show typing (used by SimulationEngine/UIAdapter)
-  window._abrox.showTyping = function(names){
-    try{
-      const typingRow = document.getElementById('typingRow');
-      const typingText = document.getElementById('typingText');
-      if(!typingRow || !typingText) return;
-      if(!names || !names.length){ typingRow.classList.remove('active'); document.getElementById('membersRow').classList.remove('hidden'); return; }
-      typingText.textContent = names.length === 1 ? `${names[0]} is typing…` : names.length === 2 ? `${names[0]} and ${names[1]} are typing…` : `${names.length} people are typing…`;
-      typingRow.classList.add('active'); document.getElementById('membersRow').classList.add('hidden');
-      setTimeout(()=>{ typingRow.classList.remove('active'); document.getElementById('membersRow').classList.remove('hidden'); }, 1000 + Math.random()*1800);
-    }catch(e){ console.error(e); }
-  };
-
-  // NOTE: Unified renderer responsibility moved to /message.js (window.renderMessage)
-  // The inline glue no longer defines renderMessage here — message.js must export window.renderMessage using
-  // the UI classes (.msg, .bubble, .sender, .time) so all components call the same renderer.
-
-  // reply helpers (ui-adapter provides a richer set; keep a minimal fallback)
-  window.setReplyTo = function(msgId){
-    try{
-      if(window._abrox && typeof window._abrox.setReplyTo === 'function'){
-        return window._abrox.setReplyTo(msgId);
-      }
-      const target = document.querySelector(`[data-id="${msgId}"]`);
-      if(!target) return;
-      const senderText = target.querySelector('.sender') ? target.querySelector('.sender').textContent : 'Message';
-      const snippet = target.querySelector('.content') ? target.querySelector('.content').textContent.slice(0,120) : '';
-      const container = document.getElementById('replyPreviewContainer');
-      container.innerHTML = `<div class="reply-preview" id="replyPreview">\n      <div style="display:flex;justify-content:space-between;align-items:center">\n        <div style="font-weight:700">${escapeHtml(senderText)}</div>\n        <div class="close-btn" id="replyClose" title="Cancel">✕</div>\n      </div>\n      <div class="snippet">${escapeHtml(snippet)}</div>\n    </div>`;
-      replyTo = msgId;
-      const closeBtn = document.getElementById('replyClose');
-      if(closeBtn) closeBtn.addEventListener('click', ()=> { replyTo = null; const cont = document.getElementById('replyPreviewContainer'); if(cont) cont.innerHTML = ''; });
-    }catch(e){ console.warn('setReplyTo fallback failed', e); }
-  };
-
-  // send message helper (creates a minimal message object and renders it)
-  function doSendMessage(text){
-    if(!text || !text.trim()) return;
+  // send message on click or Enter
+  function doSend(){
+    if(!input) return;
+    const val = (input.value || '').trim();
+    if(!val) return;
     const m = {
       id: 'local_' + Date.now(),
       name: 'You',
       displayName: 'You',
-      role: 'VERIFIED',
+      role: 'YOU',
       avatar: '',
-      text: (replyTo ? (`↪ ${document.querySelector(`[data-id="${replyTo}"] .sender`)?.textContent || 'Reply'}: ` : '') + text,
+      text: val,
       out: true,
-      time: Date.now(),
-      replyTo: replyTo || null,
-      pinned: false,
-      attachment: null
+      time: Date.now()
     };
-    // render via unified renderer
-    try{ if(typeof window.renderMessage === 'function') window.renderMessage(m, true); }
-    catch(e){ console.error('doSendMessage render failed', e); }
-
-    // clear UI
-    const input = document.getElementById('input'); if(input) { input.value = ''; toggleSendButton(); }
-    const cont = document.getElementById('replyPreviewContainer'); if(cont) cont.innerHTML = '';
-    replyTo = null;
-
-    // feed into MessagePool / SimulationEngine if available
-    try{
-      if(window.MessagePool && typeof window.MessagePool.messages !== 'undefined'){
-        window.MessagePool.messages.unshift(m);
-        if(window.MessagePool._idIndex) window.MessagePool._idIndex[m.id] = 0;
-      }
-      if(window.simulationEngine && typeof window.simulationEngine.onLocalSend === 'function'){
-        window.simulationEngine.onLocalSend(m);
-      }
-    }catch(e){}
+    // render locally
+    try{ window.renderMessage && window.renderMessage(m, true); }catch(e){}
+    input.value = ''; toggleSendButton();
   }
+  sendBtn && sendBtn.addEventListener('click', doSend);
+  input && input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); doSend(); } });
 
-  // show/hide send button depending on input content
-  function toggleSendButton(){
-    const input = document.getElementById('input');
-    const send = document.getElementById('send');
-    if(!input || !send) return;
-    if(input.value && input.value.trim().length){ send.classList.remove('hidden'); } else { send.classList.add('hidden'); }
-  }
+  // attach media/upload
+  mediaBtn && mediaBtn.addEventListener('click', ()=>{ if(fileInput) fileInput.click(); });
+  fileInput && fileInput.addEventListener('change', (ev)=>{ const f = ev.target.files && ev.target.files[0]; if(!f) return; const m = { id:'local_file_'+Date.now(), name:'You', displayName:'You', role:'YOU', avatar:'', text: f.name + ' (attachment)', out:true, time:Date.now() }; try{ window.renderMessage && window.renderMessage(m, true); }catch(e){} fileInput.value = ''; });
 
-  // wire send events
-  document.addEventListener('click', (e) => { if(e.target.closest && e.target.closest('#send')){ const input = document.getElementById('input'); if(input) doSendMessage(input.value); } });
-  document.addEventListener('keydown', (e) => { const input = document.getElementById('input'); if(!input) return; if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); doSendMessage(input.value); } });
-  document.addEventListener('input', (e) => { if(e.target && e.target.id === 'input') toggleSendButton(); });
+  // emoji button (simple demo: insert 🙂)
+  emojiBtn && emojiBtn.addEventListener('click', ()=>{ if(!input) return; input.value = input.value + ' 🙂'; input.focus(); toggleSendButton(); });
+
+  // mic (toggle aria-pressed)
+  micBtn && micBtn.addEventListener('click', ()=>{ const pressed = micBtn.getAttribute('aria-pressed') === 'true'; micBtn.setAttribute('aria-pressed', (!pressed).toString()); });
 
   // sidebar toggle
-  document.getElementById('membersBtn')?.addEventListener('click', ()=>{
-    const sb = document.getElementById('sidebar'); if(!sb) return; const hidden = sb.classList.contains('translate-x-full'); if(hidden){ sb.classList.remove('translate-x-full'); sb.setAttribute('aria-hidden','false'); } else { sb.classList.add('translate-x-full'); sb.setAttribute('aria-hidden','true'); }
+  membersBtn && membersBtn.addEventListener('click', ()=>{
+    if(!sidebar) return;
+    const hidden = sidebar.classList.contains('translate-x-full');
+    if(hidden){ sidebar.classList.remove('translate-x-full'); sidebar.setAttribute('aria-hidden','false'); }
+    else { sidebar.classList.add('translate-x-full'); sidebar.setAttribute('aria-hidden','true'); }
   });
-  document.getElementById('closeSidebar')?.addEventListener('click', ()=>{ const sb = document.getElementById('sidebar'); if(sb){ sb.classList.add('translate-x-full'); sb.setAttribute('aria-hidden','true'); } });
+  closeSidebar && closeSidebar.addEventListener('click', ()=>{ if(sidebar){ sidebar.classList.add('translate-x-full'); sidebar.setAttribute('aria-hidden','true'); } });
 
-  // member search simple filter
-  document.getElementById('memberSearch')?.addEventListener('input', (e)=>{ const q = (e.target.value || '').toLowerCase().trim(); const nodes = Array.from(document.querySelectorAll('#memberList .member-row')); nodes.forEach(n => { const txt = (n.textContent || '').toLowerCase(); n.style.display = txt.indexOf(q) === -1 ? 'none' : ''; }); });
+  // member search filter
+  memberSearch && memberSearch.addEventListener('input', (e)=>{
+    const q = (e.target.value || '').toLowerCase().trim();
+    const nodes = Array.from(document.querySelectorAll('#memberList .member-row'));
+    nodes.forEach(n => {
+      const txt = (n.textContent || '').toLowerCase();
+      n.style.display = txt.indexOf(q) === -1 ? 'none' : '';
+    });
+  });
 
-  // unread button scroll behavior
+  // unread button
   const unreadBtn = document.getElementById('unreadBtn');
-  unreadBtn?.addEventListener('click', ()=>{ const chat = document.getElementById('chat'); if(chat){ chat.scrollTop = chat.scrollHeight; unreadBtn.style.display = 'none'; } });
+  unreadBtn && unreadBtn.addEventListener('click', ()=>{ const chat = document.getElementById('chat'); if(chat){ chat.scrollTop = chat.scrollHeight; unreadBtn.style.display = 'none'; } });
 
-  // load persisted pinned message (if any)
-  (function loadPinned(){ try{ const txt = localStorage.getItem('pinned_message_text'); if(txt){ const pb = document.getElementById('pinnedText'); if(pb) pb.textContent = txt; const banner = document.getElementById('pinnedBanner'); if(banner) banner.classList.remove('hidden'); } }catch(e){} })();
+  // restore pinned message
+  (function loadPinned(){
+    try{
+      const txt = localStorage.getItem('pinned_message_text');
+      if(txt){ const pb = document.getElementById('pinnedText'); if(pb) pb.textContent = txt; const banner = document.getElementById('pinnedBanner'); if(banner) banner.classList.remove('hidden'); }
+    }catch(e){}
+  })();
 
-  // basic auto-scroll hide/unread logic on manual scroll
+  // basic scroll/unread logic
   const chatEl = document.getElementById('chat');
-  if(chatEl){ let lastScroll = 0; chatEl.addEventListener('scroll', ()=>{ const btn = document.getElementById('unreadBtn'); if(!btn) return; if(chatEl.scrollTop + chatEl.clientHeight >= chatEl.scrollHeight - 60){ btn.style.display = 'none'; } else { btn.style.display = 'block'; } lastScroll = Date.now(); }, {passive:true}); }
-
-  /* ------------------ Bootstrapping: wire simulation pieces if present ------------------ */
-  function safeInit(){
-    try{ if(window.SyntheticPeople && typeof window.SyntheticPeople.generatePool === 'function'){ if(window.SyntheticPeople.people && window.SyntheticPeople.people.length){ try{ window._abrox.setSampleMembers(window.SyntheticPeople.exportForSimulation()); }catch(e){} } else { try{ window.SyntheticPeople.generatePool({ size: Math.min(500, (window.SyntheticPeople.meta?.size||4872)), seedBase: window.SyntheticPeople.meta?.seedBase || 2026 }); }catch(e){} } } }catch(e){ console.warn('Safe init SyntheticPeople failed', e); }
-
-    try{ if(window.MessagePool && typeof window.MessagePool.generatePool === 'function'){ const previewSize = 500; const targetSize = Math.min(previewSize, Number(window.MessagePool.meta?.size || 500)); window.MessagePool.generatePool({ size: targetSize, seedBase: window.MessagePool.meta?.seedBase || 4000, spanDays: window.MessagePool.meta?.spanDays || 365 }); if(typeof window.MessagePool.regenerateAndInject === 'function'){ window.MessagePool.regenerateAndInject({ inject: true, initialCount: Math.min(40, window.MessagePool.messages.length) }); } else if(typeof window.renderMessage === 'function'){ const initial = Math.min(20, window.MessagePool.messages.length || 0); for(let i=0;i<initial;i++) try{ window.renderMessage(window.MessagePool.messages[i], false); }catch(e){} } } }catch(e){ console.warn('Safe init MessagePool failed', e); }
-
-    try{ if(window.TypingEngine && typeof window.TypingEngine.configure === 'function'){ window.TypingEngine.configure({ seedBase: window.TypingEngine.getConfig?.()?.seedBase ?? null, avgEveryMs: 12000, burstChance: 0.45 }); window.TypingEngine.start?.(); } }catch(e){ console.warn('Safe init TypingEngine failed', e); }
-
-    try{ if(window.simulationEngine && typeof window.simulationEngine.onAppReady === 'function'){ window.simulationEngine.onAppReady(); } if(window.uiAdapter && typeof window.uiAdapter.init === 'function'){ window.uiAdapter.init({ renderMessage: window.renderMessage, setSampleMembers: window._abrox.setSampleMembers }); } }catch(e){}
+  if(chatEl){
+    chatEl.addEventListener('scroll', ()=>{
+      const btn = document.getElementById('unreadBtn');
+      if(!btn) return;
+      if(chatEl.scrollTop + chatEl.clientHeight >= chatEl.scrollHeight - 80) btn.style.display = 'none'; else btn.style.display = 'block';
+    }, {passive:true});
   }
 
-  // Run bootstrap after a tiny delay to allow external scripts to auto-init
-  setTimeout(safeInit, 300);
-
-  // expose a quick debug helper to force re-run of safeInit from console
-  window._abrox.bootstrap = safeInit;
-
-  // initial toggle state for send button
-  toggleSendButton();
-
-})(); // end UI glue
+})();
 </script>
 
 </body>
